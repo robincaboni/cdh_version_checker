@@ -1,0 +1,16 @@
+{
+    "id": "cdh_version_checker",
+    "title": "CDH Version Checker",
+    "description": "",
+    "icon_url": "http://127.0.0.1:8080/tealium_login_logo.png",
+    "scripts": {
+      "cdh_version_checker": {
+        "auto_inject": true,
+        "js": "http://127.0.0.1:8080/cdh_version_checker.js",
+        "remote_js": true,
+        "template": "http://127.0.0.1:8080/cdh_version_checker.html",
+        "remote_template": true
+      }
+    }
+  }
+  // https://solutions.tealium.net/hosted/rcaboni/cdh_version_checker/cdh_version_checker.html

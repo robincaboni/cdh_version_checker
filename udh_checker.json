@@ -1,0 +1,15 @@
+{
+  "id": "udh_checker",
+  "title": "UDH Checker",
+  "description": "",
+  "icon_url": "https://my.tealiumiq.com/img/login/tealium_login_logo.png",
+  "scripts": {
+    "udh_checker": {
+      "auto_inject": true,
+      "js": "https://solutions.tealium.net/hosted/tealiumTools/udh_checker/udh_checker.js",
+      "remote_js": true,
+      "template": "https://solutions.tealium.net/hosted/tealiumTools/udh_checker/udh_checker.html",
+      "remote_template": true
+    }
+  }
+}
