@@ -1,163 +1,164 @@
+
 <script type="text/x-handlebars">
-    <style type="text/css">
-    footer{
-      bottom: 0;
-      margin-bottom: 10px;
-      position: fixed;
-      z-index: 1030;
+  <style type="text/css">
+  footer{
+    bottom: 0;
+    margin-bottom: 10px;
+    position: fixed;
+    z-index: 1030;
+  }
+  
+  .scrollable{
+    overflow-y: auto;
+    min-height: 20px;
+    max-height: 250px;
+    margin-bottom: 20px;
+    min-width: 300px;
+    padding: 5px;
+  }
+  
+  .btn-grp button{
+    margin-right: 10px;
+  }
+  </style>
+  
+  <header></header>
+  
+  {{#if ui_start}}
+  
+   
+    <p>Check for Attributes Titles containing non-ASCII or exceeds 250 characters.</p>
+    <div class="btn-grp" style="margin-top:5px;">
+      <button id="run_submit" class="btn btn-success">Start</button>
+    </div>
+  
+  {{/if}}
+  
+  {{#if ui_error}}
+  
+    <br>
+    <div class="alert alert-danger">
+      <h4>Error:</h4>
+      <p>{{data.error_message}}</p>
+    </div>
+  
+    <div class="btn-grp" style="margin-top:5px;">
+      <button id="start_submit" class="btn btn-warning">Restart</button>
+    </div>
+  
+  {{/if}}
+  
+  {{#if ui_wait}}
+  
+    <div>
+      {{#if data.wait_message}}
+        <p>{{data.wait_message}}</p>
+      {{/if}}
+    </div>
+  
+  {{/if}}
+  
+  {{#if ui_finish}}
+  
+    {{#if data.attributes}}
+  
+    <p>The following attributes are non-ASCII or exceeds 250 characters and should be fixed:</p>
+    <div class="scrollable">
+    <table class="table table-bordered"><thead><tr><th>Name</th><th>ID</th></tr></thead><tbody>
+      {{#each data.attributes}}
+        <tr><td>{{this.name}}</td><td>{{this.id}}</td></tr>
+      {{/each}}
+    </tbody></table>
+    </div>
+    {{else}}
+    <p>There are no errors!! YAY!!!!!!</p>
+  
+    {{/if}}
+  
+    <div class="btn-grp" style="margin-top:5px;">
+      <button id="start_submit" class="btn btn-warning">Restart</button>
+    </div>
+  
+  {{/if}}
+  
+  <footer></footer>
+  
+  <script type="text/javascript">
+    {{#if header}}
+    //Show the header message
+    var header = jQuery("<textarea/>").html('{{header}}').text();
+    jQuery("header").html(header);
+    {{/if}}
+    
+    {{#if footer}}
+    //Show the footer message
+    var footer = jQuery("<textarea/>").html('{{footer}}').text();
+    jQuery("footer").html(footer);
+    {{/if}}
+    window.makeProgressCircle = window.makeProgressCircle || function() {
+      if(jQuery('div[id=progressCircle]').length === 0){
+        jQuery('<div id="progressCircle"><i class="fa fa-cog fa-spin fa-3x fa-fw"></i></div>')
+         .attr('style', 'position:fixed;top:50%;left:50%;margin-top:-18px;margin-left:-18px;z-index:5001;color:#AAA;')
+         .width(35)
+         .height(35)
+         .prependTo(document.body);
+     }
     }
-    
-    .scrollable{
-      overflow-y: auto;
-      min-height: 20px;
-      max-height: 250px;
-      margin-bottom: 20px;
-      min-width: 300px;
-      padding: 5px;
+    window.removeProgressCircle = window.removeProgressCircle || function() {
+      jQuery('div[id=progressCircle]').remove();
     }
-    
-    .btn-grp button{
-      margin-right: 10px;
-    }
-    </style>
-    
-    <header></header>
-    
+    //Remove any current mousedown events on the exit button
+    jQuery('#custom-tool-exit-btn').off('mousedown');
+    //Listen for clicking on the exit button
+    jQuery('#custom-tool-exit-btn').on('mousedown', function(){
+      tealiumTools.invokeFunction('{{namespace}}',{command:"exit"});
+    });
+    //Remove existing click handlers
+    jQuery('#run_submit,#start_submit').off('click');
+    //Add click handlers for buttons
+    jQuery('#run_submit').on('click', function(){
+      tealiumTools.invokeFunction('{{namespace}}',{command:"run"});
+    });
+    jQuery('#start_submit').on('click', function(){
+      tealiumTools.invokeFunction('{{namespace}}',{command:"start"});
+    });
+  
     {{#if ui_start}}
-    
-     
-      <p>Check for Attributes Titles containing non-ASCII or exceeds 250 characters.</p>
-      <div class="btn-grp" style="margin-top:5px;">
-        <button id="run_submit" class="btn btn-success">Start</button>
-      </div>
-    
+  
+      try{
+        removeProgressCircle();
+      }catch(e){
+        console.log(e);
+      }
+  
     {{/if}}
-    
-    {{#if ui_error}}
-    
-      <br>
-      <div class="alert alert-danger">
-        <h4>Error:</h4>
-        <p>{{data.error_message}}</p>
-      </div>
-    
-      <div class="btn-grp" style="margin-top:5px;">
-        <button id="start_submit" class="btn btn-warning">Restart</button>
-      </div>
-    
-    {{/if}}
-    
     {{#if ui_wait}}
-    
-      <div>
-        {{#if data.wait_message}}
-          <p>{{data.wait_message}}</p>
-        {{/if}}
-      </div>
-    
+  
+      try{
+        window.makeProgressCircle();
+      }catch(e){
+        console.log(e);
+      }
+  
     {{/if}}
-    
+    {{#if ui_error}}
+  
+      try{
+        removeProgressCircle();
+      }catch(e){
+        console.log(e);
+      }
+  
+    {{/if}}
     {{#if ui_finish}}
-    
-      {{#if data.attributes}}
-    
-      <p>The following attributes are non-ASCII or exceeds 250 characters and should be fixed:</p>
-      <div class="scrollable">
-      <table class="table table-bordered"><thead><tr><th>Name</th><th>ID</th></tr></thead><tbody>
-        {{#each data.attributes}}
-          <tr><td>{{this.name}}</td><td>{{this.id}}</td></tr>
-        {{/each}}
-      </tbody></table>
-      </div>
-      {{else}}
-      <p>There are no errors!! YAY!!!!!!</p>
-    
-      {{/if}}
-    
-      <div class="btn-grp" style="margin-top:5px;">
-        <button id="start_submit" class="btn btn-warning">Restart</button>
-      </div>
-    
-    {{/if}}
-    
-    <footer></footer>
-    
-    <script type="text/javascript">
-      {{#if header}}
-      //Show the header message
-      var header = jQuery("<textarea/>").html('{{header}}').text();
-      jQuery("header").html(header);
-      {{/if}}
-      
-      {{#if footer}}
-      //Show the footer message
-      var footer = jQuery("<textarea/>").html('{{footer}}').text();
-      jQuery("footer").html(footer);
-      {{/if}}
-      window.makeProgressCircle = window.makeProgressCircle || function() {
-        if(jQuery('div[id=progressCircle]').length === 0){
-          jQuery('<div id="progressCircle"><i class="fa fa-cog fa-spin fa-3x fa-fw"></i></div>')
-           .attr('style', 'position:fixed;top:50%;left:50%;margin-top:-18px;margin-left:-18px;z-index:5001;color:#AAA;')
-           .width(35)
-           .height(35)
-           .prependTo(document.body);
-       }
+  
+      try{
+        removeProgressCircle();
+      }catch(e){
+        console.log(e);
       }
-      window.removeProgressCircle = window.removeProgressCircle || function() {
-        jQuery('div[id=progressCircle]').remove();
-      }
-      //Remove any current mousedown events on the exit button
-      jQuery('#custom-tool-exit-btn').off('mousedown');
-      //Listen for clicking on the exit button
-      jQuery('#custom-tool-exit-btn').on('mousedown', function(){
-        tealiumTools.invokeFunction('{{namespace}}',{command:"exit"});
-      });
-      //Remove existing click handlers
-      jQuery('#run_submit,#start_submit').off('click');
-      //Add click handlers for buttons
-      jQuery('#run_submit').on('click', function(){
-        tealiumTools.invokeFunction('{{namespace}}',{command:"run"});
-      });
-      jQuery('#start_submit').on('click', function(){
-        tealiumTools.invokeFunction('{{namespace}}',{command:"start"});
-      });
-    
-      {{#if ui_start}}
-    
-        try{
-          removeProgressCircle();
-        }catch(e){
-          console.log(e);
-        }
-    
-      {{/if}}
-      {{#if ui_wait}}
-    
-        try{
-          window.makeProgressCircle();
-        }catch(e){
-          console.log(e);
-        }
-    
-      {{/if}}
-      {{#if ui_error}}
-    
-        try{
-          removeProgressCircle();
-        }catch(e){
-          console.log(e);
-        }
-    
-      {{/if}}
-      {{#if ui_finish}}
-    
-        try{
-          removeProgressCircle();
-        }catch(e){
-          console.log(e);
-        }
-    
-      {{/if}}  
-    </script>
-    
-    </script>
+  
+    {{/if}}  
+  </script>
+  
+  </script>
